@@ -19,7 +19,7 @@ jQuery('input#submit').on('click', (e) => {
                 jQuery("#my_amazon_div").html(response.data);
             },
             error: function (response) {
-                //console.log(response)  
+                console.log(response)  
             }
         })
     }
