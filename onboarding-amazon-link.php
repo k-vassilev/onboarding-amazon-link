@@ -24,7 +24,7 @@ function amazon_link(){
     <label for="amazon_link"><h2>Amazon link: </h2></label>
     <input type="text" id="amazon_link" name="amazon_link" title="Valid amazon url"><br><br>
 
-    <label for="cache_duration">Cache duration in minutes:</label>
+    <label for="cache_duration">Cache duration:</label>
     <select name="cache_duration" id="cache_duration">
         <option value="60">1 min</option>
         <option value="1800">30 min</option>
