@@ -17,12 +17,23 @@ function add_amazon_link_plugin_menu(){
 
 function amazon_link(){
     //start buffering html
+    
+
     ob_start();
     ?>
     <label for="amazon_link"><h2>Amazon link: </h2></label>
     <input type="text" id="amazon_link" name="amazon_link" title="Valid amazon url"><br><br>
+
+    <label for="cache_duration">Cache duration in minutes:</label>
+    <select name="cache_duration" id="cache_duration">
+        <option value="60">1 min</option>
+        <option value="1800">30 min</option>
+        <option value="3600">1 hour</option>
+        <option value="86400">1 day</option>
+    </select>
+
     <input type="submit" id="submit" name="submit" value="SUBMIT">
-    <div id="my_amazon_div" style="margin-top:25px; width: 1200px;"></div>
+    <div id="my_amazon_div" style="display: flex;"><?php echo get_transient( 'amazon_cached_data' ); ?></div>
     <?php
 
     //echo and stop buffering hmtl
@@ -42,10 +53,23 @@ function amazon_get_links() {
     //sanitze the url link
     $sanitized_link =  sanitize_url(($_POST['amazon_link']));
 
+    $sanitized_cache_duration = sanitize_text_field(($_POST['cache_duration_option']));
+        if ($sanitized_cache_duration =='60') {
+            $cache_duration = 60;
+        }else if($sanitized_cache_duration =='1800') {
+            $cache_duration = 1800;
+        }else if ($sanitized_cache_duration =='3600') {
+            $cache_duration = 3600;
+        }else if($sanitized_cache_duration =='86400') {
+            $cache_duration = 86400;
+        }
+
+    
     //gets the data from the sanitized link
-    $amazon_data = wp_remote_retrieve_body( wp_remote_get( $sanitized_link ) ) ;
+    $amazon_data = wp_remote_retrieve_body( wp_remote_get( $sanitized_link ) );
+    
+    $cached_data = set_transient( 'amazon_cached_data', $amazon_data, $cache_duration );
     
     wp_send_json_success($amazon_data);
-    
-};
+}
 ?>
