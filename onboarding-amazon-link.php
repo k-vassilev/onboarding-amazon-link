@@ -77,4 +77,7 @@ function amazon_get_links() {
     //sends the data back to js to append it (the html)
     wp_send_json_success($amazon_data);
 }
+
+
+
 ?>
