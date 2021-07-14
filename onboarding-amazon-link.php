@@ -30,8 +30,6 @@ function ob_add_amazon_link_plugin_menu() {
  * @return void
  */
 function ob_amazon_link() {
-	// starts buffering html.
-	ob_start();
 	?>
 	<label for="amazon_link"><h2>Amazon link: </h2></label>
 	<input type="text" id="amazon_link" name="amazon_link" title="Valid amazon url"><br><br>
@@ -39,6 +37,7 @@ function ob_amazon_link() {
 	<label for="cache_duration">Cache duration:</label>
 	<select name="cache_duration" id="cache_duration">
 		<option value="60">1 min</option>
+		<option value="120">2 min</option>
 		<option value="1800">30 min</option>
 		<option value="3600">1 hour</option>
 		<option value="86400">1 day</option>
@@ -47,9 +46,6 @@ function ob_amazon_link() {
 	<input type="submit" id="submit" name="submit" value="SUBMIT">
 	<div id="my_amazon_div" style="display: flex;"><?php echo get_transient( 'amazon_cached_data' ); ?></div>
 	<?php
-
-	// echo and stop buffering hmtl.
-	echo ob_get_clean();
 };
 
 /**
@@ -76,22 +72,20 @@ function amazon_get_links() {
 	$sanitized_link = esc_url_raw( ( $_POST['amazon_link'] ) );
 
 	// cache duration logic.
-	$sanitized_cache_duration = sanitize_text_field( ( $_POST['cache_duration_option'] ) );
-	if ( '60' === $sanitized_cache_duration ) {
-		$cache_duration = 60;
-	} elseif ( '1800' === $sanitized_cache_duration ) {
-		$cache_duration = 1800;
-	} elseif ( '3600' === $sanitized_cache_duration ) {
-		$cache_duration = 3600;
-	} elseif ( '86400' === $sanitized_cache_duration ) {
-		$cache_duration = 86400;
+	$cache_duration = sanitize_text_field( ( $_POST['cache_duration_option'] ) );
+
+	// URL Validation.
+	if ( ! isset( $sanitized_link ) ) {
+		return;
+	}
+	if ( ! wp_http_validate_url( $sanitized_link ) ) {
+		return;
 	}
 
 	// gets the data from the sanitized link.
-	$amazon_data = wp_remote_retrieve_body( wp_remote_get( $sanitized_link ) );
-
+	$amazon_data = wp_remote_retrieve_body( wp_safe_remote_get( $sanitized_link ) );
 	// sets the cache.
-	set_transient( 'amazon_cached_data', $amazon_data, $cache_duration );
+	set_transient( 'amazon_cached_data', $amazon_data, (int) $cache_duration );
 
 	// sends the data back to js to append it (the html).
 	wp_send_json_success( $amazon_data );
