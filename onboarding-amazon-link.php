@@ -13,15 +13,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Adds action for the plugin menu to be displayed.
-add_action( 'admin_menu', 'add_amazon_link_plugin_menu' );
+add_action( 'admin_menu', 'ob_add_amazon_link_plugin_menu' );
 
 /**
  * Adds the plugin to the main menu
  *
  * @return void
  */
-function add_amazon_link_plugin_menu() {
-	add_menu_page( 'Amazon link', 'Amazon link', 'administrator', 'amazon-link', 'amazon_link', 'dashicons-amazon' );
+function ob_add_amazon_link_plugin_menu() {
+	add_menu_page( 'Amazon link', 'Amazon link', 'administrator', 'amazon-link', 'ob_amazon_link', 'dashicons-amazon' );
 }
 
 /**
@@ -29,7 +29,7 @@ function add_amazon_link_plugin_menu() {
  *
  * @return void
  */
-function amazon_link() {
+function ob_amazon_link() {
 	// starts buffering html.
 	ob_start();
 	?>
@@ -57,21 +57,21 @@ function amazon_link() {
  *
  * @return void
  */
-function add_amazon_script() {
+function ob_add_amazon_script() {
 	wp_enqueue_script('amazon_get_links', plugins_url( 'amazon_get_links.js', __FILE__ ), array( 'jquery' ), false, true );
 	wp_localize_script( 'amazon_get_links', 'ajax_object', array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
 };
 
 // use admin_enqueue_scripts to enque to the admin only.
-add_action( 'admin_enqueue_scripts', 'add_amazon_script' );
-add_action( 'wp_ajax_amazon_get_links', 'amazon_get_links' );
+add_action( 'admin_enqueue_scripts', 'ob_add_amazon_script' );
+add_action( 'wp_ajax_amazon_get_links', 'ob_amazon_get_links' );
 
 /**
  * Gets the ajax request from the user input to the js file and sets the transient data.
  *
  * @return void
  */
-function amazon_get_links() {
+function ob_amazon_get_links() {
 	// sanitze the url link.
 	$sanitized_link = esc_url_raw( ( $_POST['amazon_link'] ) );
 

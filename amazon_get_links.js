@@ -4,7 +4,7 @@ jQuery('input#submit').on('click', (e) => {
 
     //Defines the data to work with
     let data = {
-        action: 'amazon_get_links',
+        action: 'ob_amazon_get_links',
         amazon_link: link_target, 
         cache_duration_option: cache_duration_option
     }
