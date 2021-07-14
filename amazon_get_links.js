@@ -1,10 +1,11 @@
 jQuery('input#submit').on('click', (e) => {
+	
     const link_target = document.querySelector('input#amazon_link').value;
     const cache_duration_option = document.querySelector('select#cache_duration').value;
 
     //Defines the data to work with
     let data = {
-        action: 'ob_amazon_get_links',
+        action: 'amazon_get_links',
         amazon_link: link_target, 
         cache_duration_option: cache_duration_option
     }
@@ -25,5 +26,3 @@ jQuery('input#submit').on('click', (e) => {
         });
     };
 });
-
-

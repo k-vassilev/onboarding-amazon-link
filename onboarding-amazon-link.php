@@ -64,14 +64,14 @@ function ob_add_amazon_script() {
 
 // use admin_enqueue_scripts to enque to the admin only.
 add_action( 'admin_enqueue_scripts', 'ob_add_amazon_script' );
-add_action( 'wp_ajax_amazon_get_links', 'ob_amazon_get_links' );
+add_action( 'wp_ajax_amazon_get_links', 'amazon_get_links' );
 
 /**
  * Gets the ajax request from the user input to the js file and sets the transient data.
  *
  * @return void
  */
-function ob_amazon_get_links() {
+function amazon_get_links() {
 	// sanitze the url link.
 	$sanitized_link = esc_url_raw( ( $_POST['amazon_link'] ) );
 
